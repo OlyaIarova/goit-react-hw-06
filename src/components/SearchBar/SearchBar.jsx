@@ -1,14 +1,18 @@
+import { useDispatch } from 'react-redux';
 import CSS from './SearchBar.module.css';
+import { contactFilter } from '../../redux/filterSlice';
 
-export function SearchBar({ inputValue, handleFilter }) {
+export function SearchBar() {
+   const dispatch = useDispatch();
   return (
     <div className={CSS.label}>
       <p>Find contacts by name</p>
       <input
         className={CSS.searchInput}
         type="text"
-        value={inputValue}
-        onChange={handleFilter}
+        onChange={event =>
+          dispatch(contactFilter(event.target.value.toLowerCase()))
+        }
       />
     </div>
   );

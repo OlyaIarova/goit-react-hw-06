@@ -4,7 +4,10 @@ import * as Yup from 'yup';
 import { nanoid } from 'nanoid';
 import CSS from './ContactForm.module.css';
 
-export function ContactForm({ addContactCard }) {
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contactSlice';
+
+export function ContactForm() {
   const initialValues = {
     name: '',
     number: '',
@@ -12,6 +15,7 @@ export function ContactForm({ addContactCard }) {
 
   const nameID = useId();
   const numberID = useId();
+    const dispatch = useDispatch();
 
   const userSchema = Yup.object().shape({
     name: Yup.string()
@@ -23,10 +27,9 @@ export function ContactForm({ addContactCard }) {
 
   const handleSubmit = (values, actions) => {
     actions.resetForm();
-    return addContactCard({
-      ...values,
-      id: nanoid(),
-    });
+    dispatch(
+      addContact({ id: crypto.randomUUID(), name: values.name, number: values.number })
+    );
   };
 
   return (
@@ -34,6 +37,7 @@ export function ContactForm({ addContactCard }) {
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={userSchema}
+      validateOnBlur={false}
     >
       <Form className={CSS.form}>
         <label htmlFor={nameID}>Name</label>
